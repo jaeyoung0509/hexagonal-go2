@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"hexagonal-go/internal/adapters/framework/left/grpc/pb"
 	"hexagonal-go/internal/ports"
 	"log"
 	"net"
@@ -23,7 +24,12 @@ func (grpca Adapter) Run() {
 	if err != nil {
 		log.Fatalf("Failed to listen on port %v: %v", err)
 	}
+
 	arithmeticServiceServer := grpca
 	grpcServer := grpc.NewServer()
+	pb.RegisterArithmeticServiceServer(grpcServer, arithmeticServiceServer)
+	if err := grpcServer.Serve(listen); err != nil {
+		log.Fatalf("failed to serve grpc server :%v", err)
+	}
 	// TODO: implementations
 }
